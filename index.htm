@@ -1,50 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-<style>
-.emoji {
-  position: absolute;
-  animation: move 2s ease-in-out infinite;
-  transform: translate(-50%, -50%) rotate(0deg);
-}
-
-@keyframes move {
-  0% {
-    top: 0;
-    left: 0;
-  }
-  25% {
-    top: 0;
-    left: calc(100% - 50px);
-  }
-  50% {
-    top: calc(100% - 50px);
-    left: calc(100% - 50px);
-  }
-  75% {
-    top: calc(100% - 50px);
-    left: 0;
-  }
-  100% {
-    top: 0;
-    left: 0;
-  }
-}
-</style>
+  <style>
+    #game-area {
+      width: 500px;
+      height: 500px;
+      background-image: url('https://gigazine.net/cdn-cgi/mirage/fa870aaba0898132ce859f692e31b1fb1dfd7ed43b5af27c398965a814d4885b/1280/https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif');
+      position: relative;
+    }
+    #player {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      width: 50px;
+      height: 50px;
+    }
+    #instructions {
+      position: absolute;
+      bottom: 60px;
+      left: 10px;
+      color: white;
+    }
+    #score {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      color: white;
+    }
+  </style>
 </head>
-<body style="background-image: url(https://thumb.ac-illust.com/e9/e9b5c48be286675d0d1503f3d1b53f64_t.jpeg); background-size: cover;">
-
-<button onclick="moveEmoji()">Move Emoji</button>
-<p id="emoji" class="emoji">🙂</p>
-
-<script>
-const moveEmoji = () => {
-  const emoji = document.getElementById("emoji");
-  const emojis = [ "😀", "😁", "😂", "🤣", "😃", "😄", "😅", "😆", "😉", "😊" ];
-  const randomIndex = Math.floor(Math.random() * emojis.length);
-  emoji.innerHTML = emojis[randomIndex];
-}
-</script>
-
+<body>
+  <div id="game-area">
+    <div id="player">🐣</div>
+    <div id="instructions">Use arrow keys to move</div>
+    <div id="score">Score: 0</div>
+  </div>
+  <script src="game.js"></script>
 </body>
 </html>
+<script>
+    const player = document.getElementById("player");
+const gameArea = document.getElementById("game-area");
+const instructions = document.getElementById("instructions");
+const scoreDisplay = document.getElementById("score");
+
+let score = 0;
+
+document.onkeydown = function(e) {
+  switch (e.keyCode) {
+    case 37:
+      player.style.left = (player.offsetLeft - 10) + "px";
+      break;
+    case 38:
+      player.style.top = (player.offsetTop - 10) + "px";
+      break;
+    case 39:
+      player.style.left = (player.offsetLeft + 10) + "px";
+      break;
+    case 40:
+      player.style.top = (player.offsetTop + 10) + "px";
+      break;
+  }
+};
+
+function generateEnemy() {
+  let x = Math.floor(Math.random() * 450);
+  let y = Math.floor(Math.random() * 450);
+  let enemy = document.createElement("div");
+  enemy.style.left = x + "px";
+  enemy.style.top = y + "px";
+  enemy.innerHTML = "💥";
+  enemy.classList.add("enemy");
+  gameArea.appendChild(enemy);
+
+  setInterval(function() {
+    if (isCollision(player, enemy)) {
+
+</script>
