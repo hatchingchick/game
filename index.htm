@@ -1,95 +1,147 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style>
-      #background {
-        background-image: url("https://gigazine.net/cdn-cgi/mirage/fa870aaba0898132ce859f692e31b1fb1dfd7ed43b5af27c398965a814d4885b/1280/https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif");
-        height: 100%;
-        width: 100%;
-        background-size: cover;
-      }
-      #cursor {
-        font-size: 50px;
-        position: absolute;
-        cursor: none;
-      }
-      #timer {
-        font-size: 30px;
-        position: absolute;
-        bottom: 5px;
-        right: 5px;
-      }
-      #instructions {
-        font-size: 20px;
-        position: absolute;
-        bottom: 5px;
-        left: 5px;
-      }
-    </style>
-  </head>
-  <body id="background">
-    <div id="cursor">🐣</div>
+<head>
+  <meta charset="UTF-8">
+  <title>Emoji Game</title>
+  <style>
+    #container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    #background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url(https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif);
+      background-size: cover;
+    }
+    #instructions {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 10px;
+      color: white;
+      font-size: 12px;
+    }
+    #timer {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      padding: 10px;
+      color: white;
+      font-size: 12px;
+    }
+    #gameover {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 36px;
+      text-align: center;
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    <div id="instructions">Move the cursor to avoid the angry emoji</div>
     <div id="timer"></div>
-    <div id="instructions">Use your mouse to avoid the randomly generated 🐣</div>
-    <script>
-      const cursor = document.getElementById("cursor");
-      const timer = document.getElementById("timer");
-      let timeLeft = 30;
-      let gameInterval = null;
-      let emojis = [];
-      const emojiSize = 50;
+    <div id="gameover"></div>
+  </div>
+  <script src="game.js"></script>
+<script>
+const emoji = document.getElementById("emoji");
+const timer = document.getElementById("timer");
+const emoji = document.getElementById("emoji");
+const timer = document.getElementById("timer");
+const gameover = document.getElementById("gameover");
+const instructions = document.getElementById("instructions");
 
-      document.onmousemove = function(e) {
-        cursor.style.left = e.clientX + "px";
-        cursor.style.top = e.clientY + "px";
-      };
+let timeLeft = 60;
+let gameRunning = false;
+let gameWon = false;
 
-      function spawnEmoji() {
-        let x = Math.random() * (window.innerWidth - emojiSize);
-        let y = Math.random() * (window.innerHeight - emojiSize);
-        let emoji = document.createElement("div");
-        emoji.innerHTML = "🐣";
-        emoji.style.fontSize = emojiSize + "px";
-        emoji.style.position = "absolute";
-        emoji.style.left = x + "px";
-        emoji.style.top = y + "px";
-        document.body.appendChild(emoji);
-        emojis.push(emoji);
-      }
+// set the initial position of the emoji
+const setEmojiPosition = () => {
+  const x = Math.floor(Math.random() * window.innerWidth);
+  const y = Math.floor(Math.random() * window.innerHeight);
+  emoji.style.left = `${x}px`;
+  emoji.style.top = `${y}px`;
+};
 
-      function checkCollision() {
-        for (let emoji of emojis) {
-          let x1 = cursor.offsetLeft;
-          let y1 = cursor.offsetTop;
-          let x2 = emoji.offsetLeft;
-          let y2 = emoji.offsetTop;
-          if (
-            x1 < x2 + emojiSize &&
-            x1 + emojiSize > x2 &&
-            y1 < y2 + emojiSize &&
-            y1 + emojiSize > y2
-          ) {
-            clearInterval(gameInterval);
-            alert("Game Over!");
-          }
-        }
-      }
+// update the timer display
+const updateTimer = () => {
+  timer.innerHTML = `Time left: ${timeLeft}s`;
+};
 
-      function startGame() {
-        gameInterval = setInterval(function() {
-          spawnEmoji();
-          check
-          timeLeft--;
-          timer.innerHTML = "Time left: " + timeLeft + "s";
-          if (timeLeft === 0) {
-            clearInterval(gameInterval);
-            alert("You Win!");
-          }
-        }, 5000);
-      }
+// check for collision between the cursor and the emoji
+const checkCollision = (event) => {
+  const cursorX = event.clientX;
+  const cursorY = event.clientY;
+  const emojiRect = emoji.getBoundingClientRect();
+  if (
+    cursorX >= emojiRect.left &&
+    cursorX <= emojiRect.right &&
+    cursorY >= emojiRect.top &&
+    cursorY <= emojiRect.bottom
+  ) {
+    gameRunning = false;
+    gameover.innerHTML = "Game Over 💀";
+    gameover.style.visibility = "visible";
+  }
+};
 
-      startGame();
-    </script>
-  </body>
+// start the game
+const startGame = () => {
+  gameRunning = true;
+  gameWon = false;
+  timeLeft = 60;
+  setEmojiPosition();
+  updateTimer();
+  gameover.style.visibility = "hidden";
+  instructions.style.visibility = "hidden";
+  const gameInterval = setInterval(() => {
+    if (!gameRunning) {
+      clearInterval(gameInterval);
+      return;
+    }
+    if (timeLeft === 0) {
+      gameRunning = false;
+      gameWon = true;
+      gameover.innerHTML = "You Won 🎉";
+      gameover.style.visibility = "visible";
+      clearInterval(gameInterval);
+      return;
+    }
+    timeLeft--;
+    updateTimer();
+  }, 1000);
+};
+
+// handle mouse movement
+document.addEventListener("mousemove", (event) => {
+  if (!gameRunning) {
+    return;
+  }
+  checkCollision(event);
+});
+
+// handle clicks on the document
+document.addEventListener("click", () => {
+  if (!gameRunning && !gameWon) {
+    startGame();
+  }
+});
+
+// initialize the game
+startGame();
+
+
+</script>
+</body>
 </html>
-
