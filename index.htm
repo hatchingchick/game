@@ -42,42 +42,6 @@
 
     <meta charset="UTF-8">
     <title>Escape Game</title>
-#game-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-#game-area {
-  width: 100%;
-  height: 100%;
-  background: url(https://gigazine.net/cdn-cgi/mirage/fa870aaba0898132ce859f692e31b1fb1dfd7ed43b5af27c398965a814d4885b/1280/https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif);
-  position: relative;
-}
-
-#cursor {
-  width: 20px;
-  height: 20px;
-  background-color: #fff;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-}
-
-#enemies {
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-#instructions {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  color: #fff;
-}
 <script>
 const gameArea = document.querySelector('#game-area');
 const cursor = document.querySelector('#cursor');
