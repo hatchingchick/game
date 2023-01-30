@@ -1,119 +1,76 @@
 <!DOCTYPE html>
 <html>
   <head>
-<style>
-#game-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-#game-area {
-  width: 100%;
-  height: 100%;
-  background: url(https://gigazine.net/cdn-cgi/mirage/fa870aaba0898132ce859f692e31b1fb1dfd7ed43b5af27c398965a814d4885b/1280/https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif);
-  position: relative;
-}
-
-#cursor {
-  width: 20px;
-  height: 20px;
-  background-color: #fff;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-}
-
-#enemies {
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-#instructions {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  color: #fff;
-}
-</style>
-
-    <meta charset="UTF-8">
-    <title>Escape Game</title>
-<script>
-const gameArea = document.querySelector('#game-area');
-const cursor = document.querySelector('#cursor');
-const enemies = document.querySelector('#enemies');
-
-let enemyInterval;
-let laserInterval;
-
-function createEnemy() {
-  const enemy = document.createElement('div');
-  enemy.innerHTML = '🐣';
-  enemy.style.position = 'absolute';
-  enemy.style.left = `${Math.random() * 100}%`;
-  enemy.style.top = `${Math.random() * 100}%`;
-  enemies.appendChild(enemy);
-}
-
-function moveEnemies() {
-  const enemyElements = document.querySelectorAll('#enemies div');
-  enemyElements.forEach((enemy) => {
-    const cursorRect = cursor.getBoundingClientRect();
-    const enemyRect = enemy.getBoundingClientRect();
-
-</script>
+    <style>
+      #background {
+        background-image: url("https://gigazine.net/cdn-cgi/mirage/fa870aaba0898132ce859f692e31b1fb1dfd7ed43b5af27c398965a814d4885b/1280/https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif");
+        height: 100%;
+        width: 100%;
+        background-size: cover;
+      }
+      #cursor {
+        font-size: 50px;
+        position: absolute;
+        cursor: none;
+      }
+      #timer {
+        font-size: 30px;
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+      }
+      #instructions {
+        font-size: 20px;
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+      }
+    </style>
   </head>
-  <body>
-<script>
-const gameArea = document.querySelector('#game-area');
-const cursor = document.querySelector('#cursor');
-const enemies = document.querySelector('#enemies');
+  <body id="background">
+    <div id="cursor">🐣</div>
+    <div id="timer"></div>
+    <div id="instructions">Use your mouse to avoid the randomly generated 🐣</div>
+    <script>
+      const cursor = document.getElementById("cursor");
+      const timer = document.getElementById("timer");
+      let timeLeft = 30;
+      let gameInterval = null;
+      let emojis = [];
+      const emojiSize = 50;
 
-let enemyInterval;
-let laserInterval;
+      document.onmousemove = function(e) {
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+      };
 
-function createEnemy() {
-  const enemy = document.createElement('div');
-  enemy.innerHTML = '🐣';
-  enemy.style.position = 'absolute';
-  enemy.style.left = `${Math.random() * 100}%`;
-  enemy.style.top = `${Math.random() * 100}%`;
-  enemies.appendChild(enemy);
-}
+      function spawnEmoji() {
+        let x = Math.random() * (window.innerWidth - emojiSize);
+        let y = Math.random() * (window.innerHeight - emojiSize);
+        let emoji = document.createElement("div");
+        emoji.innerHTML = "🐣";
+        emoji.style.fontSize = emojiSize + "px";
+        emoji.style.position = "absolute";
+        emoji.style.left = x + "px";
+        emoji.style.top = y + "px";
+        document.body.appendChild(emoji);
+        emojis.push(emoji);
+      }
 
-function moveEnemies() {
-  const enemyElements = document.querySelectorAll('#enemies div');
-  enemyElements.forEach((enemy) => {
-    const cursorRect = cursor.getBoundingClientRect();
-    const enemyRect = enemy.getBoundingClientRect();
-    if (cursorRect.left < enemyRect.right && cursorRect.right > enemyRect.left &&
-        cursorRect.top < enemyRect.bottom && cursorRect.bottom > enemyRect.top) {
-      clearInterval(enemyInterval);
-      clearInterval(laserInterval);
-      alert('game over');
-    }
-  });
-}
-
-gameArea.addEventListener('mousemove', (event) => {
-  cursor.style.left = `${event.clientX}px`;
-  cursor.style.top = `${event.clientY}px`;
-});
-
-gameArea.addEventListener('contextmenu', (event) => {
-
-    <div id="game-container">
-      <div id="game-area">
-        <div id="cursor"></div>
-        <div id="enemies"></div>
-      </div>
-      <div id="instructions">
-        Right click to shoot laser
-      </div>
-    </div>
-  </body>
-</html>
+      function checkCollision() {
+        for (let emoji of emojis) {
+          let x1 = cursor.offsetLeft;
+          let y1 = cursor.offsetTop;
+          let x2 = emoji.offsetLeft;
+          let y2 = emoji.offsetTop;
+          if (
+            x1 < x2 + emojiSize &&
+            x1 + emojiSize > x2 &&
+            y1 < y2 + emojiSize &&
+            y1 + emojiSize > y2
+          ) {
+            clearInterval(gameInterval);
+            alert("Game Over!");
+          }
+        }
+      }
