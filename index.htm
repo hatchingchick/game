@@ -53,8 +53,12 @@ downloadBtn.addEventListener("click", () => {
   const text = localStorage.getItem("note");
   const blob = new Blob([text], { type: "text/plain" });
   const url = URL.createObjectURL(blob);
-  downloadBtn.href = url;
-  downloadBtn.download = "note.txt";
+ const a = document.createElement('a');
+
+a.href = url;
+a.download = 'note.txt';
+
+a.click();
 });
 
 document.addEventListener("DOMContentLoaded", () => {
