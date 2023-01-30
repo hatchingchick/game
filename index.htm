@@ -1,45 +1,50 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style>
-      .emoji {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(0deg);
-        animation: move-rotate 5s infinite linear;
-      }
-      @keyframes move-rotate {
-        0% {
-          transform: translate(-50%, -50%) rotate(0deg);
-        }
-        100% {
-          transform: translate(-50%, -50%) rotate(360deg);
-        }
-      }
-      body {
-        background-image: url(https://thumb.ac-illust.com/e9/e9b5c48be286675d0d1503f3d1b53f64_t.jpeg);
-        background-size: cover;
-      }
-    </style>
-  </head>
-  <body>
-    <button id="generate-emoji-btn">Generate Emoji</button>
-    <div id="emoji-container"></div>
-  </body>
-</html>
+<head>
+<style>
+.emoji {
+  position: absolute;
+  animation: move 2s ease-in-out infinite;
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+@keyframes move {
+  0% {
+    top: 0;
+    left: 0;
+  }
+  25% {
+    top: 0;
+    left: calc(100% - 50px);
+  }
+  50% {
+    top: calc(100% - 50px);
+    left: calc(100% - 50px);
+  }
+  75% {
+    top: calc(100% - 50px);
+    left: 0;
+  }
+  100% {
+    top: 0;
+    left: 0;
+  }
+}
+</style>
+</head>
+<body style="background-image: url(https://thumb.ac-illust.com/e9/e9b5c48be286675d0d1503f3d1b53f64_t.jpeg); background-size: cover;">
+
+<button onclick="moveEmoji()">Move Emoji</button>
+<p id="emoji" class="emoji">🙂</p>
 
 <script>
-   const generateEmojiBtn = document.getElementById("generate-emoji-btn");
-const emojiContainer = document.getElementById("emoji-container");
-const emojis = ["😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇"];
-
-generateEmojiBtn.addEventListener("click", function() {
-  const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-  const emojiDiv = document.createElement("div");
-  emojiDiv.classList.add("emoji");
-  emojiDiv.innerText = emoji;
-  emojiContainer.appendChild(emojiDiv);
-});
-
+const moveEmoji = () => {
+  const emoji = document.getElementById("emoji");
+  const emojis = [ "😀", "😁", "😂", "🤣", "😃", "😄", "😅", "😆", "😉", "😊" ];
+  const randomIndex = Math.floor(Math.random() * emojis.length);
+  emoji.innerHTML = emojis[randomIndex];
+}
 </script>
+
+</body>
+</html>
