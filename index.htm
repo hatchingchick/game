@@ -1,46 +1,83 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <title>Escape Game</title>
 <style>
 #game-container {
   width: 100%;
   height: 100%;
   position: relative;
 }
+
 #game-area {
-width: 100%;
-height: 100%;
-background: url(https://gigazine.net/cdn-cgi/mirage/fa870aaba0898132ce859f692e31b1fb1dfd7ed43b5af27c398965a814d4885b/1280/https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif);
-position: relative;
+  width: 100%;
+  height: 100%;
+  background: url(https://gigazine.net/cdn-cgi/mirage/fa870aaba0898132ce859f692e31b1fb1dfd7ed43b5af27c398965a814d4885b/1280/https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif);
+  position: relative;
 }
 
 #cursor {
-width: 20px;
-height: 20px;
-background-color: #fff;
-position: absolute;
-left: 50%;
-top: 50%;
-transform: translate(-50%, -50%);
-border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
 }
 
 #enemies {
-position: absolute;
-left: 0;
-top: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 #instructions {
-position: absolute;
-bottom: 10px;
-left: 10px;
-color: #fff;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: #fff;
 }
 </style>
 
+    <meta charset="UTF-8">
+    <title>Escape Game</title>
+#game-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#game-area {
+  width: 100%;
+  height: 100%;
+  background: url(https://gigazine.net/cdn-cgi/mirage/fa870aaba0898132ce859f692e31b1fb1dfd7ed43b5af27c398965a814d4885b/1280/https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif);
+  position: relative;
+}
+
+#cursor {
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+
+#enemies {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+#instructions {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: #fff;
+}
 <script>
 const gameArea = document.querySelector('#game-area');
 const cursor = document.querySelector('#cursor');
@@ -63,41 +100,56 @@ function moveEnemies() {
   enemyElements.forEach((enemy) => {
     const cursorRect = cursor.getBoundingClientRect();
     const enemyRect = enemy.getBoundingClientRect();
-    const enemySpeed = 0.5;
-    const xDiff = cursorRect.left - enemyRect.left;
-    const yDiff = cursorRect.top - enemyRect.top;
-    const distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-    const xMovement = (xDiff / distance) * enemySpeed;
-    const yMovement = (yDiff / distance) * enemySpeed;
-    enemy.style.left = `${enemyRect.left + xMovement}px`;
-    enemy.style.top = `${enemyRect.top + yMovement}px`;
-    if (cursorRect.left >= enemyRect.left && cursorRect.left <= enemyRect.right && cursorRect.top >= enemyRect.top && cursorRect.top <= enemyRect.bottom) {
-      gameOver();
-if (
-      cursorRect.left < enemyRect.right &&
-      cursorRect.right > enemyRect.left &&
-      cursorRect.top < enemyRect.bottom &&
-      cursorRect.bottom > enemyRect.top
-    ) {
+
+</script>
+  </head>
+  <body>
+<script>
+const gameArea = document.querySelector('#game-area');
+const cursor = document.querySelector('#cursor');
+const enemies = document.querySelector('#enemies');
+
+let enemyInterval;
+let laserInterval;
+
+function createEnemy() {
+  const enemy = document.createElement('div');
+  enemy.innerHTML = '🐣';
+  enemy.style.position = 'absolute';
+  enemy.style.left = `${Math.random() * 100}%`;
+  enemy.style.top = `${Math.random() * 100}%`;
+  enemies.appendChild(enemy);
+}
+
+function moveEnemies() {
+  const enemyElements = document.querySelectorAll('#enemies div');
+  enemyElements.forEach((enemy) => {
+    const cursorRect = cursor.getBoundingClientRect();
+    const enemyRect = enemy.getBoundingClientRect();
+    if (cursorRect.left < enemyRect.right && cursorRect.right > enemyRect.left &&
+        cursorRect.top < enemyRect.bottom && cursorRect.bottom > enemyRect.top) {
       clearInterval(enemyInterval);
       clearInterval(laserInterval);
-      alert('Game Over!');
+      alert('game over');
     }
   });
 }
 
-gameArea.addEventListener('contextmenu', (event) => {
-  event.preventDefault();
-  cursor.style.backgroundColor = 'red';
-  laserInterval = setInterval(() => {
-    cursor.style.backgroundColor = '#fff';
-  }, 100);
+gameArea.addEventListener('mousemove', (event) => {
+  cursor.style.left = `${event.clientX}px`;
+  cursor.style.top = `${event.clientY}px`;
 });
 
-enemyInterval = setInterval(() => {
-  createEnemy();
-  moveEnemies();
-}, 500);
-    }
-  });
-}    
+gameArea.addEventListener('contextmenu', (event) => {
+
+    <div id="game-container">
+      <div id="game-area">
+        <div id="cursor"></div>
+        <div id="enemies"></div>
+      </div>
+      <div id="instructions">
+        Right click to shoot laser
+      </div>
+    </div>
+  </body>
+</html>
