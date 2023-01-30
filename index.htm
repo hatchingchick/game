@@ -5,7 +5,7 @@
     #game-area {
       width: 500px;
       height: 500px;
-      background-image: url('https://assets.st-note.com/production/uploads/images/63067887/picture_pc_ced56f2a8b433c85d5ae364e9b369c64.png');
+      background-image: url('https://assets.st-note.com/production/uploads/images/63067887/ picture_pc_ced56f2a8b433c85d5ae364e9b369c64.png');
       position: relative;
     }
     #player {
@@ -39,7 +39,7 @@
 </body>
 </html>
 <script>
-    const player = document.getElementById("player");
+const player = document.getElementById("player");
 const gameArea = document.getElementById("game-area");
 const instructions = document.getElementById("instructions");
 const scoreDisplay = document.getElementById("score");
@@ -75,5 +75,18 @@ function generateEnemy() {
 
   setInterval(function() {
     if (isCollision(player, enemy)) {
+      score--;
+      scoreDisplay.innerHTML = "Score: " + score;
+      enemy.remove();
+    }
+  }, 100);
+}
 
-</script>
+setInterval(generateEnemy, 10000);
+
+function isCollision(a, b) {
+  let aRect = a.getBoundingClientRect();
+  let bRect = b.getBoundingClientRect();
+
+  return !(
+    (aRect.bottom
