@@ -1,147 +1,82 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Emoji Game</title>
-  <style>
-    #container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-    #background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url(https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif);
-      background-size: cover;
-    }
-    #instructions {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      padding: 10px;
-      color: white;
-      font-size: 12px;
-    }
-    #timer {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      padding: 10px;
-      color: white;
-      font-size: 12px;
-    }
-    #gameover {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      font-size: 36px;
-      text-align: center;
-      visibility: hidden;
-    }
-  </style>
-</head>
-<body>
-  <div id="container">
-    <div id="background"></div>
-    <div id="instructions">Move the cursor to avoid the angry emoji</div>
-    <div id="timer"></div>
-    <div id="gameover"></div>
-  </div>
-  <script src="game.js"></script>
+<!DOCTYPE html> 
+<html> 
+<head> 
+<style> 
+#canvas { 
+    background-image: url(https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif); 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+} 
+</style> 
+</head> 
+<body> 
+<canvas id="canvas" width="500" height="500"></canvas> 
+<script src="game.js"></script>
 <script>
-const emoji = document.getElementById("emoji");
-const timer = document.getElementById("timer");
-const emoji = document.getElementById("emoji");
-const timer = document.getElementById("timer");
-const gameover = document.getElementById("gameover");
-const instructions = document.getElementById("instructions");
+//Get canvas and context
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-let timeLeft = 60;
-let gameRunning = false;
-let gameWon = false;
+//Mouse event to update cursor position
+canvas.addEventListener("mousemove", updateCursor);
 
-// set the initial position of the emoji
-const setEmojiPosition = () => {
-  const x = Math.floor(Math.random() * window.innerWidth);
-  const y = Math.floor(Math.random() * window.innerHeight);
-  emoji.style.left = `${x}px`;
-  emoji.style.top = `${y}px`;
-};
+//Emoji positions and size
+let cursorX;
+let cursorY;
+let emojiX;
+let emojiY;
+let emojiSize = 50;
 
-// update the timer display
-const updateTimer = () => {
-  timer.innerHTML = `Time left: ${timeLeft}s`;
-};
+//Initialize emoji position
+emojiX = Math.random() * (canvas.width - emojiSize);
+emojiY = Math.random() * (canvas.height - emojiSize);
 
-// check for collision between the cursor and the emoji
-const checkCollision = (event) => {
-  const cursorX = event.clientX;
-  const cursorY = event.clientY;
-  const emojiRect = emoji.getBoundingClientRect();
-  if (
-    cursorX >= emojiRect.left &&
-    cursorX <= emojiRect.right &&
-    cursorY >= emojiRect.top &&
-    cursorY <= emojiRect.bottom
-  ) {
-    gameRunning = false;
-    gameover.innerHTML = "Game Over 💀";
-    gameover.style.visibility = "visible";
-  }
-};
+//Update cursor position
+function updateCursor(event) {
+    cursorX = event.clientX;
+    cursorY = event.clientY;
+}
 
-// start the game
-const startGame = () => {
-  gameRunning = true;
-  gameWon = false;
-  timeLeft = 60;
-  setEmojiPosition();
-  updateTimer();
-  gameover.style.visibility = "hidden";
-  instructions.style.visibility = "hidden";
-  const gameInterval = setInterval(() => {
-    if (!gameRunning) {
-      clearInterval(gameInterval);
-      return;
+//Detect collision
+function checkCollision() {
+    let distance = calculateDistance(cursorX, cursorY, emojiX, emojiY);
+    if (distance < emojiSize) {
+        //Game over
     }
-    if (timeLeft === 0) {
-      gameRunning = false;
-      gameWon = true;
-      gameover.innerHTML = "You Won 🎉";
-      gameover.style.visibility = "visible";
-      clearInterval(gameInterval);
-      return;
-    }
-    timeLeft--;
-    updateTimer();
-  }, 1000);
-};
+}
 
-// handle mouse movement
-document.addEventListener("mousemove", (event) => {
-  if (!gameRunning) {
-    return;
-  }
-  checkCollision(event);
-});
+//Calculate distance between two points
+function calculateDistance(x1, y1, x2, y2) {
+    let xDistance = x2 - x1;
+    let yDistance = y2 - y1;
+    return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+}
 
-// handle clicks on the document
-document.addEventListener("click", () => {
-  if (!gameRunning && !gameWon) {
-    startGame();
-  }
-});
+//Generate emoji randomly every 5 seconds
+setInterval(function () {
+    emojiX = Math.random() * (canvas.width - emojiSize);
+    emojiY = Math.random() * (canvas.height - emojiSize);
+}, 5000);
 
-// initialize the game
-startGame();
+//Render function to draw everything on canvas
+function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(emoji, emojiX, emojiY, emoji);
+//Draw the emojis
+ctx.drawImage(emoji, emojiX, emojiY, emojiSize, emojiSize);
+ctx.drawImage(cursor, cursorX, cursorY, emojiSize, emojiSize);
 
+//Check for collision
+checkCollision();
+
+//Repeat the render function using requestAnimationFrame
+requestAnimationFrame(render);
+}
+
+//Start the render loop
+render();
 
 </script>
-</body>
+</body> 
 </html>
