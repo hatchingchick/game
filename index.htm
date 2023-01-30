@@ -1,71 +1,78 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      * {
-        padding: 0;
-        margin: 0;
-      }
-      body {
-        background-image: url("https://gigazine.net/cdn-cgi/mirage/fa870aaba0898132ce859f692e31b1fb1dfd7ed43b5af27c398965a814d4885b/1280/https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif");
-        background-size: cover;
-      }
-      .mouse {
-        position: absolute;
-        cursor: none;
-        display: inline-block;
-        font-size: 36px;
-        user-select: none;
-      }
-      .instructions {
-        position: absolute;
-        bottom: 10px;
-        left: 10px;
-        color: white;
-        font-size: 16px;
-      }
-    </style>
+    <meta charset="UTF-8">
+    <title>Escape Game</title>
+#game-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#game-area {
+  width: 100%;
+  height: 100%;
+  background: url(https://gigazine.net/cdn-cgi/mirage/fa870aaba0898132ce859f692e31b1fb1dfd7ed43b5af27c398965a814d4885b/1280/https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif);
+  position: relative;
+}
+
+#cursor {
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+
+#enemies {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+#instructions {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: #fff;
+}
+<script>
+const gameArea = document.querySelector('#game-area');
+const cursor = document.querySelector('#cursor');
+const enemies = document.querySelector('#enemies');
+
+let enemyInterval;
+let laserInterval;
+
+function createEnemy() {
+  const enemy = document.createElement('div');
+  enemy.innerHTML = '🐣';
+  enemy.style.position = 'absolute';
+  enemy.style.left = `${Math.random() * 100}%`;
+  enemy.style.top = `${Math.random() * 100}%`;
+  enemies.appendChild(enemy);
+}
+
+function moveEnemies() {
+  const enemyElements = document.querySelectorAll('#enemies div');
+  enemyElements.forEach((enemy) => {
+    const cursorRect = cursor.getBoundingClientRect();
+    const enemyRect = enemy.getBoundingClientRect();
+
+</script>
   </head>
   <body>
-    <div class="mouse">🐣</div>
-    <p class="instructions">Move your mouse to escape the emojis</p>
-    <script>
-      const mouse = document.querySelector(".mouse");
-      let x = 0;
-      let y = 0;
-      document.addEventListener("mousemove", function(event) {
-        x = event.clientX;
-        y = event.clientY;
-        mouse.style.left = x + "px";
-        mouse.style.top = y + "px";
-      });
-
-      const emojis = [
-        "😺",
-        "🦊",
-        "🐻",
-        "🦁",
-        "🐯",
-        "🐶",
-        "🐱",
-        "🐭"
-      ];
-
-      setInterval(function() {
-        const emoji = document.createElement("span");
-        emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-        emoji.style.position = "absolute";
-        emoji.style.left = Math.random() * window.innerWidth + "px";
-        emoji.style.top = Math.random() * window.innerHeight + "px";
-        emoji.style.fontSize = Math.random() * 36 + 12 + "px";
-        document.body.appendChild(emoji);
-        let xSpeed = (Math.random() - 0.5) * 5;
-        let ySpeed = (Math.random() - 0.5) * 5;
-        setInterval(function() {
-          emoji.style.left = emoji.offsetLeft + xSpeed + "px";
-          emoji.style.top = emoji.offsetTop + ySpeed + "px";
-        }, 50);
-      }, 10000);
-    </script>
+    <div id="game-container">
+      <div id="game-area">
+        <div id="cursor"></div>
+        <div id="enemies"></div>
+      </div>
+      <div id="instructions">
+        Right click to shoot laser
+      </div>
+    </div>
   </body>
 </html>
