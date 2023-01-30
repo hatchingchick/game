@@ -75,28 +75,4 @@ function moveEnemies() {
       gameOver();
     }
   });
-}    if (
-      cursorRect.left < enemyRect.right &&
-      cursorRect.right > enemyRect.left &&
-      cursorRect.top < enemyRect.bottom &&
-      cursorRect.bottom > enemyRect.top
-    ) {
-      clearInterval(enemyInterval);
-      clearInterval(laserInterval);
-      alert('Game Over!');
-    }
-  });
-}
-
-gameArea.addEventListener('contextmenu', (event) => {
-  event.preventDefault();
-  cursor.style.backgroundColor = 'red';
-  laserInterval = setInterval(() => {
-    cursor.style.backgroundColor = '#fff';
-  }, 100);
-});
-
-enemyInterval = setInterval(() => {
-  createEnemy();
-  moveEnemies();
-}, 500);
+}    
