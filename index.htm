@@ -73,6 +73,31 @@ function moveEnemies() {
     enemy.style.top = `${enemyRect.top + yMovement}px`;
     if (cursorRect.left >= enemyRect.left && cursorRect.left <= enemyRect.right && cursorRect.top >= enemyRect.top && cursorRect.top <= enemyRect.bottom) {
       gameOver();
+if (
+      cursorRect.left < enemyRect.right &&
+      cursorRect.right > enemyRect.left &&
+      cursorRect.top < enemyRect.bottom &&
+      cursorRect.bottom > enemyRect.top
+    ) {
+      clearInterval(enemyInterval);
+      clearInterval(laserInterval);
+      alert('Game Over!');
+    }
+  });
+}
+
+gameArea.addEventListener('contextmenu', (event) => {
+  event.preventDefault();
+  cursor.style.backgroundColor = 'red';
+  laserInterval = setInterval(() => {
+    cursor.style.backgroundColor = '#fff';
+  }, 100);
+});
+
+enemyInterval = setInterval(() => {
+  createEnemy();
+  moveEnemies();
+}, 500);
     }
   });
 }    
