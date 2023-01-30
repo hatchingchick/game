@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        background-image: url("https://naokeyzmt.com/blog/wp-content/themes/naokeyfirst/assets/images/article/2019/july/06/petitcom4_51_thumb.jpg");
+        background-size: cover;
+      }
+      #game {
+        width: 500px;
+        height: 500px;
+        margin: 32px auto;
+        position: relative;
+        background-color: rgba(255, 255, 255, 0.5);
+        border: 16px solid #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      }
+      #emoji {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 72px;
+      }
+      #beam {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 100%;
+        transform: translate(-50%, -50%);
+        width: 16px;
+        height: 16px;
+        background-color: #ffffff;
+        border-radius: 8px;
+      }
+    </style>
+    <script>
+      var emoji = document.getElementById("emoji");
+      var beam = document.getElementById("beam");
+      var x = 250;
+      var y = 250;
+      var step = 50;
+
+      function getRandomEmoji() {
+        var emojis = ["🐣", "🐥", "🐦", "🐤"];
+        var randomIndex = Math.floor(Math.random() * emojis.length);
+        emoji.innerHTML = emojis[randomIndex];
+      }
+
+      function moveUp() {
+        y -= step;
+        emoji.style.top = y + "px";
+        beam.style.top = y + "px";
+      }
+
+      function moveDown() {
+        y += step;
+        emoji.style.top = y + "px";
+        beam.style.top = y + "px";
+      }
+
+      function moveLeft() {
+        x -= step;
+        emoji.style.left = x + "px";
+        beam.style.left = x + emoji.offsetWidth + "px";
+      }
+
+      function moveRight() {
+        x += step;
+        emoji.style.left = x + "px";
+        beam.style.left = x + emoji.offsetWidth + "px";
+      }
+
+      function fireBeam() {
+        beam.style.display = "block";
+        setTimeout(function() {
+          beam.style.display = "none";
+        }, 500);
+      }
+
+      document.onkeydown = function(event
