@@ -1,82 +1,69 @@
-<!DOCTYPE html> 
-<html> 
-<head> 
-<style> 
-#canvas { 
-    background-image: url(https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif); 
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-} 
-</style> 
-</head> 
-<body> 
-<canvas id="canvas" width="500" height="500"></canvas> 
-<script src="game.js"></script>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Twitter-style Notepad</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+<style>
+body {
+  background-image: url('https://i.gzn.jp/img/2014/11/29/1041uuu-gif/06.gif');
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+textarea {
+  width: 50%;
+  height: 50%;
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid gray;
+  resize: none;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: lightgray;
+  border: 1px solid gray;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+</style>
+  </head>
+  <body>
+    <textarea id="note"></textarea>
+    <button id="save">Save</button>
+    <button id="download">Download</button>
+    <script src="script.js"></script>
 <script>
-//Get canvas and context
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const note = document.getElementById("note");
+const saveBtn = document.getElementById("save");
+const downloadBtn = document.getElementById("download");
 
-//Mouse event to update cursor position
-canvas.addEventListener("mousemove", updateCursor);
+saveBtn.addEventListener("click", () => {
+  localStorage.setItem("note", note.value);
+});
 
-//Emoji positions and size
-let cursorX;
-let cursorY;
-let emojiX;
-let emojiY;
-let emojiSize = 50;
+downloadBtn.addEventListener("click", () => {
+  const text = localStorage.getItem("note");
+  const blob = new Blob([text], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  downloadBtn.href = url;
+  downloadBtn.download = "note.txt";
+});
 
-//Initialize emoji position
-emojiX = Math.random() * (canvas.width - emojiSize);
-emojiY = Math.random() * (canvas.height - emojiSize);
-
-//Update cursor position
-function updateCursor(event) {
-    cursorX = event.clientX;
-    cursorY = event.clientY;
-}
-
-//Detect collision
-function checkCollision() {
-    let distance = calculateDistance(cursorX, cursorY, emojiX, emojiY);
-    if (distance < emojiSize) {
-        //Game over
-    }
-}
-
-//Calculate distance between two points
-function calculateDistance(x1, y1, x2, y2) {
-    let xDistance = x2 - x1;
-    let yDistance = y2 - y1;
-    return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
-}
-
-//Generate emoji randomly every 5 seconds
-setInterval(function () {
-    emojiX = Math.random() * (canvas.width - emojiSize);
-    emojiY = Math.random() * (canvas.height - emojiSize);
-}, 5000);
-
-//Render function to draw everything on canvas
-function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(emoji, emojiX, emojiY, emoji);
-//Draw the emojis
-ctx.drawImage(emoji, emojiX, emojiY, emojiSize, emojiSize);
-ctx.drawImage(cursor, cursorX, cursorY, emojiSize, emojiSize);
-
-//Check for collision
-checkCollision();
-
-//Repeat the render function using requestAnimationFrame
-requestAnimationFrame(render);
-}
-
-//Start the render loop
-render();
+document.addEventListener("DOMContentLoaded", () => {
+  const savedNote = localStorage.getItem("note");
+  if (savedNote) {
+    note.value = savedNote;
+  }
+});
 
 </script>
-</body> 
+  </body>
 </html>
