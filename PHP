@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Random Emoji Game</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <h1>Random Emoji Game</h1>
+  <div id="game-container">
+    <div id="emoji">🐣</div>
+    <div id="beam"></div>
+  </div>
+  <button id="generate-emoji-btn">Generate Random Emoji</button>
+  <p>Use arrow keys to move the emoji. Press B to shoot beam.</p>
+</body>
+<script type="text/javascript" src="script.js"></script>
+</html>
