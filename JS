@@ -1,0 +1,21 @@
+const gameContainer = document.getElementById("game-container");
+const emoji = document.getElementById("emoji");
+const beam = document.getElementById("beam");
+const generateEmojiBtn = document.getElementById("generate-emoji-btn");
+
+const emojis = [
+  "🐶",
+  "🐱",
+  "🦊",
+  "🐻",
+  "🐨",
+  "🐼",
+  "🦁",
+  "🐯",
+  "🐵",
+  "🐒"
+];
+
+generateEmojiBtn.addEventListener("click", function() {
+  const randomIndex = Math.floor(Math.random() * emojis.length);
+  emoji.innerHTML = emojis[
